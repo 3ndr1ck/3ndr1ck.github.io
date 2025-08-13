@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OM STREAM TV</title> <!-- titre de la page -->
+<link rel="icon" type="image/x-icon" href="favicon.ico"> <!-- Icône de la page -->
+<meta name="revised" content="13/08/2024" /> <!-- date dernière revision du code -->
+<meta name="author" content="3ndr1ck" /> <!-- Auteur -->
+<meta name="robots" content="noindex, nofollow">  <!-- empeche robot d'indexer la page -->
+<meta http-equiv="Pragma" content="no_cache" /> <!-- Empêche la mise en cache -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Adapter à la largeur de tous les écrans -->
+  <title>404 — Page introuvable</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root{
+      --bg:#000000;
+      --text:#87CEEB;      /* bleu ciel */
+      --muted:#6fb7d1;     /* variante légèrement plus sombre */
+      --accent:#00BFFF;    /* deep sky blue pour les accents */
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
+    }
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+    .card{
+      width:min(720px,100%);
+      background: rgba(255,255,255,0.02);
+      border:1px solid rgba(135,206,235,0.25);
+      border-radius:24px;
+      padding:32px;
+      box-shadow:0 10px 40px rgba(0,191,255,0.12), inset 0 0 80px rgba(135,206,235,0.06);
+      backdrop-filter: blur(2px);
+      text-align:center;
+    }
+    .code{
+      font-weight:800;
+      font-size: clamp(56px, 10vw, 128px);
+      letter-spacing: .02em;
+      margin: 0;
+      line-height: .9;
+      text-shadow: 0 0 18px rgba(0,191,255,.35);
+    }
+    .subtitle{
+      font-size: clamp(18px, 2.5vw, 22px);
+      margin: 8px 0 18px;
+      color: var(--muted);
+    }
+    .hint{
+      margin: 0 auto 20px;
+      max-width: 56ch;
+      color: var(--text);
+      opacity:.9;
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      margin-top: 22px;
+    }
+    .btn, .link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:12px 18px;
+      border-radius:14px;
+      border:1px solid rgba(135,206,235,.35);
+      text-decoration:none;
+      color:var(--text);
+      transition: transform .08s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+      will-change: transform;
+    }
+    .btn{
+      background: rgba(0,191,255,.1);
+      box-shadow: 0 6px 18px rgba(0,191,255,.18);
+    }
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,191,255,.24) }
+    .link:hover{ background: rgba(255,255,255,0.04) }
+    .search{
+      margin-top: 22px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+    }
+    input[type="search"]{
+      width:min(520px, 100%);
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid rgba(135,206,235,.35);
+      background:#030303;
+      color:var(--text);
+      outline:none;
+    }
+    input[type="search"]::placeholder{ color: rgba(135,206,235,.7) }
+    .badge{
+      display:inline-block;
+      font-size:12px;
+      padding:6px 10px;
+      border:1px solid rgba(135,206,235,.35);
+      border-radius:999px;
+      color:var(--muted);
+      margin-bottom:12px;
+      background: rgba(255,255,255,0.02);
+    }
+    footer{
+      text-align:center;
+      color: var(--muted);
+      opacity:.8;
+      margin-top:22px;
+      font-size:13px;
+    }
+    /* Petite animation douce */
+    @keyframes float {
+      from { transform: translateY(0) }
+      50% { transform: translateY(-6px) }
+      to { transform: translateY(0) }
+    }
+    .glow{ animation: float 6s ease-in-out infinite }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" role="alert" aria-live="polite">
+      <span class="badge">Erreur 404</span>
+      <h1 class="code glow">404</h1>
+      <h2 class="subtitle">Oups… Il semble que tu saches pas bien !!!</h2>
+      <p class="hint">
+        L’URL change pour chaque STREAM !! 
+      </p>
+      <p class="hint">
+        Passe toujours par le lien mis a dispo sur mon compte X 
+      </p>
+
+      <div class="actions">
+        <!-- Remplacez href="/" par l’URL de votre page d’accueil -->
+        <a class="btn" href="/" aria-label="Retour à l’accueil">⟵ Retour à l’accueil</a>
+      </div>
+
+      <footer><p>Code : 404 — Page non trouvée</p>
+<a href="https://twitter.com/intent/follow?screen_name=OmStreamtv" class="twitter-follow-button" data-show-count="false" data-size="large">Suivre @OmStreamtv</a>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</footer>
+    </section>
+  </main>
+
+  <!-- (Optionnel) Redirection douce vers l’accueil après 10 s : décommentez ci-dessous -->
+  <!--
+  <script>
+    setTimeout(function(){ window.location.href = "/"; }, 10000);
+  </script>
+  -->
+</body>
+</html>
