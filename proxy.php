@@ -1,31 +1,34 @@
 <?php
-// Autoriser CORS pour que GitHub Pages puisse y accéder
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: GET, OPTIONS");
 
-// Vérification pour OPTIONS (pré-requête CORS)
+// Pour gérer les pré-requêtes CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// URL de ton flux vidéo HTTP
-$url = "http://199.115.193.230/live/play/V1VwV1pGaDFVa2RGY0ZJellqVlVaRWswTDJaRFpreEVkVXhZTkhkb2JXTmtNMjgwYkhjMlpHd3lWVDA9/124462";
+// URL de base de ton flux HLS HTTP
+$baseUrl = "http://199.115.193.230/live/play/V1VwV1pGaDFVa2RGY0ZJellqVlVaRWswTDJaRFpreEVkVXhZTkhkb2JXTmtNMjgwYkhjMlpHd3lWVDA9/124462";
 
-// Détection de l'extension pour le type MIME
-$ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
-if ($ext === "m3u8") {
-    header("Content-Type: application/vnd.apple.mpegurl");
-} elseif ($ext === "ts") {
+// Si un fichier TS est demandé
+if (isset($_GET['file'])) {
+    $url = $baseUrl . '/' . basename($_GET['file']);
     header("Content-Type: video/mp2t");
-} else {
-    header("Content-Type: application/octet-stream");
+    readfile($url);
+    exit;
 }
 
-// Lecture du flux et envoi direct au navigateur
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
-curl_setopt($ch, CURLOPT_HEADER, false);
-curl_exec($ch);
-curl_close($ch);
+// Sinon, on sert le .m3u8 en modifiant les URLs des segments
+header("Content-Type: application/vnd.apple.mpegurl");
+
+// Récupère la playlist m3u8
+$m3u8Content = file_get_contents($baseUrl . "/index.m3u8");
+
+// Réécrit les URLs pour passer par ce proxy
+$m3u8Content = preg_replace_callback('/(.*\.ts)/', function($matches) {
+    return 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?file=' . urlencode($matches[1]);
+}, $m3u8Content);
+
+// Envoie la playlist modifiée
+echo $m3u8Content;
