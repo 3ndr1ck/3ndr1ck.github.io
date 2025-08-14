@@ -101,13 +101,13 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-/* ====== Mot de passe via fichier .password (base64) ====== */
+/* ====== Mot de passe via fichier password (base64) ====== */
 async function checkPassword() {
   const errorEl = document.getElementById('error');
   errorEl.textContent = '';
   try {
-    const res = await fetch('.password', { cache: 'no-store' });
-    if (!res.ok) throw new Error("Impossible de charger le fichier .password");
+    const res = await fetch('password', { cache: 'no-store' });
+    if (!res.ok) throw new Error("Impossible de charger le fichier password");
     const storedPassword = atob((await res.text()).trim());
     const entered = document.getElementById('passwordInput').value;
     if (entered === storedPassword) {
@@ -212,3 +212,4 @@ document.getElementById('closeBtn')?.addEventListener('click', () => { window.cl
 </footer>
 </body>
 </html>
+
