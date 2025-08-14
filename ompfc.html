@@ -177,8 +177,8 @@
 
         async function checkPassword() {
             try {
-                const res = await fetch('.password');
-                if (!res.ok) throw new Error('Impossible de charger le fichier .password');
+                const res = await fetch('password');
+                if (!res.ok) throw new Error('Impossible de charger le fichier password');
                 const base64pass = await res.text();
                 const storedPassword = atob(base64pass.trim());
                 const enteredPassword = document.getElementById('passwordInput').value;
@@ -245,4 +245,5 @@
         document.addEventListener("contextmenu", (e) => e.preventDefault());
     </script>
 </body>
+
 </html>
