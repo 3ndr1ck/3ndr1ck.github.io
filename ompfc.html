@@ -9,7 +9,6 @@
 <meta name="robots" content="noindex, nofollow">
 <title>OM Stream TV</title>
 
-<!-- Video.js -->
 <link href="https://vjs.zencdn.net/8.23.4/video-js.css" rel="stylesheet" />
 
 <style>
@@ -24,9 +23,41 @@
   .header.show img { transform:translateY(0) scale(1); opacity:1; }
   #vs { width:120px; animation: vsPulse 2.2s ease-in-out infinite; }
   @keyframes vsPulse { 0%,100%{ transform:scale(1) rotate(0deg) } 50%{ transform:scale(1.12) rotate(8deg) } }
-  #compteur-visiteurs { display:none; position:fixed; top:10px; left:10px; background:rgba(0,0,0,.5); padding:6px 10px; border-radius:6px; font-size:14px; line-height:1; color:#fff; backdrop-filter:blur(4px); z-index:1000; }
-  .video-wrap { width:100%; max-width:1280px; aspect-ratio:16/9; display:none; position:relative; }
-  .video-js { width:100%; height:100%; }
+  #compteur-visiteurs {
+    display:none;
+    position:fixed;
+    top:10px;
+    left:10px;
+    background:rgba(0,0,0,.5);
+    padding:6px 10px;
+    border-radius:6px;
+    font-size:14px;
+    line-height:1;
+    color:#fff;
+    backdrop-filter:blur(4px);
+    z-index:1000;
+    /* Styles pour le halo bleu ciel */
+    box-shadow: 0 0 10px 3px rgba(0, 191, 255, 0.7); /* Effet de halo */
+    animation: glow-blue 2s infinite alternate; /* Animation de l'effet */
+  }
+  @keyframes glow-blue {
+    from { box-shadow: 0 0 5px 2px rgba(0, 191, 255, 0.4); }
+    to { box-shadow: 0 0 15px 5px rgba(0, 191, 255, 0.8); }
+  }
+  .video-wrap {
+    width:100%;
+    max-width:1280px;
+    aspect-ratio:16/9;
+    display:none;
+    position:relative;
+    border-radius: 15px; /* Angles arrondis pour le conteneur */
+    overflow: hidden; /* Important pour que les angles arrondis fonctionnent */
+  }
+  .video-js {
+    width:100%;
+    height:100%;
+    border-radius: 15px; /* Angles arrondis pour le lecteur vidéo */
+  }
   .vjs-progress-control { display:none !important; }
   footer { position: fixed; bottom: 0; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background:#111; color:#aaa; padding:10px 16px; font-size:14px; border-top:1px solid #222; text-align: center; }
   footer .brand { margin: 0; }
@@ -39,7 +70,6 @@
 </head>
 <body>
 
-<!-- Login -->
 <div id="login">
   <h2>Entrez le mot de passe</h2>
   <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="current-password">
@@ -47,17 +77,14 @@
   <div id="error"></div>
 </div>
 
-<!-- Logos -->
 <div class="header" id="header">
   <img id="logo-dom" src="" alt="Logo Domicile" />
   <img id="vs" src="" alt="VS" />
   <img id="logo-ext" src="" alt="Logo Extérieur" />
 </div>
 
-<!-- Compteur -->
 <div id="compteur-visiteurs">Connectés : 0</div>
 
-<!-- Player -->
 <div class="video-wrap" id="videoWrap">
   <video
     id="my-video"
@@ -71,7 +98,6 @@
   </video>
 </div>
 
-<!-- Libs -->
 <script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-http-streaming@2.15.0/dist/videojs-http-streaming.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
