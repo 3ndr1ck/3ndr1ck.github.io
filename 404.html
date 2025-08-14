@@ -128,6 +128,27 @@
       to { transform: translateY(0) }
     }
     .glow{ animation: float 6s ease-in-out infinite }
+.follow-x-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: white;
+    color: black;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+.follow-x-button:hover {
+    background-color: #e6e6e6;
+    transform: translateY(-2px);
+}
+.follow-x-button svg {
+    fill: currentColor;
+}
   </style>
 </head>
 <body>
@@ -147,10 +168,14 @@
         <!-- Remplacez href="/" par l’URL de votre page d’accueil -->
         <a class="btn" href="/" aria-label="Retour à l’accueil">⟵ Retour à l’accueil</a>
       </div>
-
-      <footer><p>Code : 404 — Page non trouvée</p>
-<a href="https://twitter.com/intent/follow?screen_name=OmStreamtv" class="twitter-follow-button" data-show-count="false" data-size="large">Suivre @OmStreamtv</a>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<footer>
+    <p>© 2025 OM Stream TV - 🖕 BeIn Sport et Canal+</p>
+    <a href="https://x.com/OmStreamtv" target="_blank" class="follow-x-button" aria-label="Suivre sur X">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.901 1.144h3.284l-7.904 9.176L24 22.852h-6.165l-5.327-6.188L7.544 22.852H0l8.136-9.444L.475 1.144h6.398l4.992 5.793L18.901 1.144zm-2.128 1.834L7.56 21.054H5.405L16.634 2.978h2.139z"/>
+        </svg>
+        <span>Suivre sur X</span>
+    </a>
 </footer>
     </section>
   </main>
