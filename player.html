@@ -25,7 +25,6 @@
     transform:translateY(-40px) scale(.92); 
     opacity:0; 
     transition: all .8s cubic-bezier(.68,-0.55,.265,1.55);
-    /* Ajout de la nouvelle animation pour les logos */
     animation: heartbeat 2s infinite;
   }
   .header.show img { transform:translateY(0) scale(1); opacity:1; }
@@ -75,8 +74,6 @@
   footer .follow-x-button span { display: inline-block; vertical-align: middle; }
   footer .follow-x-button:hover { color: var(--accent); }
   @media (min-width: 600px) { footer { flex-direction: row; gap: 12px; } }
-
-  /* Ajout de la nouvelle animation @keyframes */
   @keyframes heartbeat {
     0% { transform: scale(1); }
     25% { transform: scale(1.05); }
@@ -104,14 +101,7 @@
 <div id="compteur-visiteurs">Connectés : 0</div>
 
 <div class="video-wrap" id="videoWrap">
-  <video
-    id="my-video"
-    class="video-js vjs-default-skin"
-    controls
-    preload="auto"
-    playsinline
-    webkit-playsinline
-  >
+  <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" playsinline webkit-playsinline>
     Votre navigateur ne supporte pas la balise vidéo.
   </video>
 </div>
@@ -190,7 +180,7 @@ connectionsRef.on("value", (snap) => {
   document.getElementById("compteur-visiteurs").textContent = "Connectés : " + snap.numChildren();
 });
 
-/* ====== Player init : lit flux HLS depuis json.json (clé fluxUrl) ====== */
+/* ====== Player init ====== */
 async function initPage() {
   try {
     const res = await fetch('json.json', { cache: 'no-store' });
@@ -214,12 +204,6 @@ async function initPage() {
       return;
     }
 
-    if (!/^https?:\/\//i.test(data.fluxUrl)) {
-      console.warn('fluxUrl invalide:', data.fluxUrl);
-    } else if (location.protocol === 'https:' && data.fluxUrl.startsWith('http://')) {
-      console.warn('Flux HTTP détecté sous page HTTPS : risque de blocage Mixed Content.');
-    }
-
     player.src({ src: data.fluxUrl, type: 'application/x-mpegURL' });
 
     player.ready(() => {
@@ -229,9 +213,33 @@ async function initPage() {
       });
     });
 
+    // Affichage du poster si flux plante
     player.on('error', () => {
       const err = player.error();
       console.error('Video.js error:', err);
+
+      player.pause();
+      if (data.playerBG) {
+        player.poster(data.playerBG);
+      }
+      player.reset();
+      player.poster(data.playerBG);
+      player.posterImage.show();
+
+      const overlay = document.createElement('div');
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.background = 'rgba(0,0,0,0.6)';
+      overlay.style.color = '#fff';
+      overlay.style.fontSize = '20px';
+      overlay.innerText = 'Flux indisponible pour le moment';
+      document.querySelector('#videoWrap').appendChild(overlay);
     });
 
   } catch (err) {
@@ -248,7 +256,6 @@ checkIP().then(bypassed => {
 
 document.getElementById('loginBtn').addEventListener('click', checkPassword);
 document.getElementById('passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
-
 document.addEventListener('contextmenu', e => e.preventDefault());
 </script>
 
