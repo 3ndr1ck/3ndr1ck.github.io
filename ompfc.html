@@ -32,11 +32,14 @@
   #vs { width:120px; animation: vsPulse 2.2s ease-in-out infinite; }
   @keyframes vsPulse { 0%,100%{ transform:scale(1) rotate(0deg) } 50%{ transform:scale(1.12) rotate(8deg) } }
 
-  /* Compteur */
+  /* Compteur – haut gauche, sobre */
   #compteur-visiteurs {
-    display:none; position:fixed; top:10px; right:10px;
-    background:rgba(0,0,0,.55); padding:6px 10px; border-radius:8px; font-size:14px;
-    backdrop-filter:saturate(150%) blur(6px);
+    display:none;
+    position:fixed; top:10px; left:10px;
+    background:rgba(0,0,0,.5);
+    padding:6px 10px; border-radius:6px; font-size:14px; line-height:1;
+    color:#fff; backdrop-filter:blur(4px);
+    z-index:1000;
   }
 
   /* Player */
@@ -151,14 +154,14 @@ connectionsRef.on("value", (snap) => {
   document.getElementById("compteur-visiteurs").textContent = "Connectés : " + snap.numChildren();
 });
 
-/* ====== Player init (via proxy HLS HTTPS) ====== */
+/* ====== Player init : lit flux HLS depuis json.json (clé fluxUrl) ====== */
 async function initPage() {
   try {
     const res = await fetch('json.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('json.json introuvable');
     const data = await res.json();
 
-    // Logos / VS (pré-chargement pour affichage instantané)
+    // Logos / VS
     if (data.domicile) document.getElementById('logo-dom').src = data.domicile;
     if (data.exterieur) document.getElementById('logo-ext').src = data.exterieur;
     if (data.vs) document.getElementById('vs').src = data.vs;
@@ -169,25 +172,33 @@ async function initPage() {
       preload: 'auto',
       fluid: true,
       liveui: true,
-      poster: data.playerBG || '' // Poster dynamique depuis le JSON
+      poster: data.playerBG || '' // Poster dynamique
     });
 
-    // Source via proxy HTTPS (hls-proxy.php)
-    if (!data.fluxUrl || !/^https:\/\//i.test(data.fluxUrl)) {
-      console.error('fluxUrl manquant ou non-HTTPS dans json.json');
-    } else {
-      player.src({ src: data.fluxUrl, type: 'application/x-mpegURL' });
+    if (!data.fluxUrl || typeof data.fluxUrl !== 'string') {
+      console.error('fluxUrl manquant dans json.json');
+      return;
     }
+
+    // ⚠️ On n'empêche plus les URLs HTTP ici, on log juste un warning (utile si la page est en HTTPS)
+    if (!/^https?:\/\//i.test(data.fluxUrl)) {
+      console.warn('fluxUrl invalide:', data.fluxUrl);
+    } else if (location.protocol === 'https:' && data.fluxUrl.startsWith('http://')) {
+      console.warn('Flux HTTP détecté sous page HTTPS : risque de blocage Mixed Content.');
+    }
+
+    // Source HLS
+    player.src({ src: data.fluxUrl, type: 'application/x-mpegURL' });
 
     // Autoplay safe
     player.ready(() => {
       player.play().catch(() => {
         player.muted(true);
-        player.play().then(() => player.muted(false)).catch(()=>{ /* l’utilisateur devra cliquer */ });
+        player.play().then(() => player.muted(false)).catch(()=>{ /* clic utilisateur requis */ });
       });
     });
 
-    // Log erreurs utiles
+    // Logs erreurs utiles
     player.on('error', () => {
       const err = player.error();
       console.error('Video.js error:', err);
@@ -212,4 +223,3 @@ document.getElementById('closeBtn')?.addEventListener('click', () => { window.cl
 </footer>
 </body>
 </html>
-
