@@ -12,10 +12,11 @@
   "vs": "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTdlejJ1cGZ6aDF4bG1mcjJmcWNsZ2thM21tYmJlaHVjNjczcnkwdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9dHM/letRGAUzvhDXGGLFDu/giphy.gif",
   "exterieur": "https://om-sup.ovh/team/PFC.png",
   "logo_om": "https://om-sup.ovh/team/OM.png",
-  "fluxUrl": "endrick.ovh/proxy.php",
+  "fluxUrl": "https://endrick.ovh/proxy.php",
   "playerBG": "img/player.jpg",
   "streamUrl": "ompfc.html"
 }
+
 
 
 
