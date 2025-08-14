@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // URL de ton flux vidéo HTTP
-$url = "http://199.115.193.230/live/play/TURCSlJtSm1ZWGN3UjNSWU5FTm1ibGxNY25ac1ZEVXpjbXgxUTNFcmMwVTNMMmxrT0RSM2RYWXJSVDA9/124462";
+$url = "http://199.115.193.230/live/play/V1VwV1pGaDFVa2RGY0ZJellqVlVaRWswTDJaRFpreEVkVXhZTkhkb2JXTmtNMjgwYkhjMlpHd3lWVDA9/124462";
 
 // Détection de l'extension pour le type MIME
 $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
