@@ -14,7 +14,7 @@
 <style>
   :root { --accent:#ff1e1e; }
   body { background:#000; color:#fff; font-family: Arial, sans-serif; margin:0; display:flex; flex-direction:column; align-items:center; padding-bottom:72px; }
-  #login { margin-top:48px; text-align:center; display:none; } /* login caché par défaut */
+  #login { margin-top:48px; text-align:center; display:none; }
   #login input, #login button { padding:10px 14px; font-size:16px; margin:4px; }
   #error { color:#ff5a5a; min-height:1.2em; }
   .header { display:flex; align-items:center; justify-content:center; gap:20px; margin:20px 0; opacity:0; pointer-events:none; }
@@ -36,9 +36,8 @@
     color:#fff;
     backdrop-filter:blur(4px);
     z-index:1000;
-    /* Styles pour le halo bleu ciel */
-    box-shadow: 0 0 10px 3px rgba(0, 191, 255, 0.7); /* Effet de halo */
-    animation: glow-blue 2s infinite alternate; /* Animation de l'effet */
+    box-shadow: 0 0 10px 3px rgba(0, 191, 255, 0.7);
+    animation: glow-blue 2s infinite alternate;
   }
   @keyframes glow-blue {
     from { box-shadow: 0 0 5px 2px rgba(0, 191, 255, 0.4); }
@@ -50,13 +49,16 @@
     aspect-ratio:16/9;
     display:none;
     position:relative;
-    border-radius: 15px; /* Angles arrondis pour le conteneur */
-    overflow: hidden; /* Important pour que les angles arrondis fonctionnent */
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 40px auto 0 auto;
+    /* Ajout du halo blanc ici */
+    box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.6);
   }
   .video-js {
     width:100%;
     height:100%;
-    border-radius: 15px; /* Angles arrondis pour le lecteur vidéo */
+    border-radius: 15px;
   }
   .vjs-progress-control { display:none !important; }
   footer { position: fixed; bottom: 0; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background:#111; color:#aaa; padding:10px 16px; font-size:14px; border-top:1px solid #222; text-align: center; }
