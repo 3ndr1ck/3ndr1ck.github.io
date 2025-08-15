@@ -204,9 +204,32 @@
                 box-shadow: 0 0 40px 14px rgba(135, 206, 235, 0.9);
             }
         }
+        
+        #compteur-visiteurs {
+            display: none; /* on l’affiche dès que Firebase est prêt */
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,.5);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1;
+            color: #fff;
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            box-shadow: 0 0 10px 3px rgba(0, 191, 255, 0.7);
+            animation: glow-blue 2s infinite alternate;
+        }
+        @keyframes glow-blue {
+            from { box-shadow: 0 0 5px 2px rgba(0, 191, 255, 0.4); }
+            to   { box-shadow: 0 0 15px 5px rgba(0, 191, 255, 0.8); }
+        }
     </style>
 </head>
 <body>
+    
+    <div id="compteur-visiteurs">Connectés : 0</div>
 
     <div class="main-container">
         <header class="header">DEBUT DU STREAM DANS</header>
@@ -245,6 +268,8 @@
     <script src="/js/luxon.min.js" defer></script>
     <script src="/js/countdown.js" defer></script>
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -284,6 +309,40 @@
                 popupClose.addEventListener('click', () => {
                     popup.style.display = 'none';
                 });
+            }
+
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDFxmBpV5nlMxjc811TmHCKJod_MrqG5Ak",
+                    authDomain: "compteur-f529c.firebaseapp.com",
+                    databaseURL: "https://compteur-f529c-default-rtdb.europe-west1.firebasedatabase.app",
+                    projectId: "compteur-f529c",
+                    storageBucket: "compteur-f529c.firebasestorage.app",
+                    messagingSenderId: "1098833478365",
+                    appId: "1:1098833478365:web:057a0cbeb3a7bc40d09134"
+                };
+                firebase.initializeApp(firebaseConfig);
+                const db = firebase.database();
+                const connectionsRef = db.ref("/connections");
+                const connectedRef = db.ref(".info/connected");
+
+                const compteurEl = document.getElementById("compteur-visiteurs");
+
+                connectedRef.on("value", (snap) => {
+                    if (snap.val() === true) {
+                        const con = connectionsRef.push(true);
+                        con.onDisconnect().remove();
+                    }
+                });
+
+                connectionsRef.on("value", (snap) => {
+                    compteurEl.textContent = "Connectés : " + snap.numChildren();
+                    if (compteurEl.style.display !== 'block') {
+                        compteurEl.style.display = 'block'; // l’afficher dès qu’on a un premier retour
+                    }
+                });
+            } catch (e) {
+                console.error('Erreur compteur Firebase :', e);
             }
         }
     </script>
