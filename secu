@@ -1,1 +1,39 @@
-<script>(async()=>{try{const ip=(await(await fetch('https://api.ipify.org?format=json')).json()).ip;if(ip==='93.15.67.14')return;document.addEventListener('keydown',e=>{if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="J"))||(e.ctrlKey&&e.key==="U"))e.preventDefault()});document.addEventListener('contextmenu',e=>e.preventDefault());const d=()=>{const el=new Image;Object.defineProperty(el,'id',{get:()=>window.location.href="https://example.com"});console.log('%c',el)};setInterval(d,100);setInterval(()=>{if(window.outerHeight-window.innerHeight>100)window.location.href="https://om.net"},100);setInterval(()=>{try{console.clear()}catch(e){}},50);}catch(e){console.error(e)}})();</script>
+<script>
+(async function(){
+    try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const ip = (await res.json()).ip;
+        if(ip==='93.15.67.14'){console.log("Protection désactivée pour l'IP autorisée.");return;}
+
+        // Blocage touches sensibles
+        document.addEventListener('keydown', e=>{
+            if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="J"))||(e.ctrlKey&&e.key==="U")){e.preventDefault();alert("Accès interdit !");}
+        });
+
+        // Blocage clic droit
+        document.addEventListener('contextmenu', e=>{e.preventDefault();alert("Clic droit interdit !");});
+
+        // Détection console ultra-agressive
+        const ultraDetect = () => {
+            const el = new Image();
+            Object.defineProperty(el, 'id', {
+                get: function() {
+                    window.location.href = "https://example.com";
+                }
+            });
+            // Affichage dans la console pour déclencher le getter
+            console.log('%c', el);
+        };
+
+        // Vérification très rapide et continue
+        setInterval(ultraDetect, 100);
+
+        // Surveiller taille fenêtre
+        setInterval(()=>{if(window.outerHeight-window.innerHeight>100)window.location.href="https://example.com";},100);
+
+        // Boucle infinie pour empêcher la désactivation de console.clear
+        setInterval(()=>{try{console.clear();}catch(e){}}, 50);
+
+    } catch(err){console.error("Impossible de récupérer l'IP :",err);}
+})();
+</script>
