@@ -1,39 +1,48 @@
 <script>
-(async function(){
-    try {
-        const res = await fetch('https://api.ipify.org?format=json');
-        const ip = (await res.json()).ip;
-        if(ip==='93.15.67.14'){console.log("Protection désactivée pour l'IP autorisée.");return;}
+// Récupération de l'IP publique avec un service gratuit
+fetch('https://api.ipify.org?format=json')
+.then(response => response.json())
+.then(data => {
+    const userIP = data.ip;
+    // Si l'IP n'est pas celle autorisée, activer la protection
+    if (userIP !== '93.15.67.14') {
 
-        // Blocage touches sensibles
-        document.addEventListener('keydown', e=>{
-            if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="J"))||(e.ctrlKey&&e.key==="U")){e.preventDefault();alert("Accès interdit !");}
+        // Blocage F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.addEventListener('keydown', function (e) {
+            if (e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+                (e.ctrlKey && e.key === "U")) {
+                e.preventDefault();
+                alert("Accès interdit !");
+            }
         });
 
-        // Blocage clic droit
-        document.addEventListener('contextmenu', e=>{e.preventDefault();alert("Clic droit interdit !");});
+        // Blocage du clic droit
+        document.addEventListener('contextmenu', function(e){
+            e.preventDefault();
+            alert("Clic droit interdit !");
+        });
 
-        // Détection console ultra-agressive
-        const ultraDetect = () => {
-            const el = new Image();
-            Object.defineProperty(el, 'id', {
+        // Détection console ouverte
+        (function() {
+            let consoleOpened = false;
+            const element = new Image();
+            Object.defineProperty(element, 'id', {
                 get: function() {
-                    window.location.href = "https://example.com";
+                    consoleOpened = true;
+                    window.location.href = "https://example.com"; // redirection
                 }
             });
-            // Affichage dans la console pour déclencher le getter
-            console.log('%c', el);
-        };
+            setInterval(function() {
+                consoleOpened = false;
+                console.log(element);
+                console.clear();
+            }, 1000);
+        })();
 
-        // Vérification très rapide et continue
-        setInterval(ultraDetect, 100);
-
-        // Surveiller taille fenêtre
-        setInterval(()=>{if(window.outerHeight-window.innerHeight>100)window.location.href="https://example.com";},100);
-
-        // Boucle infinie pour empêcher la désactivation de console.clear
-        setInterval(()=>{try{console.clear();}catch(e){}}, 50);
-
-    } catch(err){console.error("Impossible de récupérer l'IP :",err);}
-})();
+    } else {
+        console.log("Protection désactivée pour l'IP autorisée.");
+    }
+})
+.catch(err => console.error("Impossible de récupérer l'IP :", err));
 </script>
