@@ -1,0 +1,52 @@
+:root { --accent:#ff1e1e; }
+body {
+  background:#000; color:#fff; font-family: Arial, sans-serif;
+  margin:0; display:flex; flex-direction:column; align-items:center;
+  padding-bottom:72px;
+}
+#login { margin-top:48px; text-align:center; display:none; }
+#login input, #login button { padding:10px 14px; font-size:16px; margin:4px; }
+#error { color:#ff5a5a; min-height:1.2em; }
+.header {
+  display:flex; align-items:center; justify-content:center; gap:20px;
+  margin:20px 0; opacity:0; pointer-events:none;
+}
+.header.show { opacity:1; pointer-events:auto; transition:opacity .6s ease; }
+.header img {
+  width:100px; height:auto; transform:translateY(-40px) scale(.92);
+  opacity:0; transition: all .8s cubic-bezier(.68,-0.55,.265,1.55);
+  animation: heartbeat 2s infinite;
+}
+.header.show img { transform:translateY(0) scale(1); opacity:1; }
+#vs { width:120px; animation: vsPulse 2.2s ease-in-out infinite; }
+@keyframes vsPulse { 0%,100%{ transform:scale(1) rotate(0deg) } 50%{ transform:scale(1.12) rotate(8deg) } }
+#compteur-visiteurs {
+  display:none; position:fixed; top:10px; left:10px;
+  background:rgba(0,0,0,.5); padding:6px 10px; border-radius:6px;
+  font-size:14px; color:#fff; backdrop-filter:blur(4px);
+  z-index:1000; animation: glow-blue 2s infinite alternate;
+}
+@keyframes glow-blue {
+  from { box-shadow:0 0 5px 2px rgba(0,191,255,.4); }
+  to   { box-shadow:0 0 15px 5px rgba(0,191,255,.8); }
+}
+.video-wrap {
+  width:100%; max-width:1280px; aspect-ratio:16/9; display:none;
+  position:relative; border-radius:15px; overflow:hidden; margin:40px auto 0;
+  box-shadow:0 0 20px 5px rgba(255,255,255,.6);
+}
+.video-js { width:100%; height:100%; border-radius:15px; }
+.vjs-progress-control { display:none !important; }
+footer {
+  position:fixed; bottom:0; left:0; right:0; display:flex;
+  flex-direction:column; align-items:center; justify-content:center;
+  gap:6px; background:#111; color:#aaa; padding:10px 16px; font-size:14px;
+  border-top:1px solid #222; text-align:center;
+}
+footer .follow-x-button { display:flex; align-items:center; gap:6px; color:#aaa; text-decoration:none; }
+footer .follow-x-button:hover { color:var(--accent); }
+@media (min-width:600px){ footer{flex-direction:row; gap:12px;} }
+@keyframes heartbeat {
+  0%,50%,100% { transform:scale(1); }
+  25%,75% { transform:scale(1.05); }
+}

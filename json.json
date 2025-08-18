@@ -12,9 +12,9 @@
   "vs": "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTdlejJ1cGZ6aDF4bG1mcjJmcWNsZ2thM21tYmJlaHVjNjczcnkwdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9dHM/letRGAUzvhDXGGLFDu/giphy.gif",
   "exterieur": "https://om-sup.ovh/team/PFC.png",
   "logo_om": "https://om-sup.ovh/team/OM.png",
-  "fluxUrl": "http://199.115.193.230/live/play/UmpCdFVFcHVabGt2VlZCVWNuQklOMVpsUzJzMVpEaEhPVWg0VjA1c0wxZG9VMVJtTkVWNllUQm5ORDA9/124462",
-  "playerBG": "img/player.jpg",
-  "streamUrl": "ompfc.html"
+  "playerBG": "https://om-sup.ovh/prez/?team_home=OM&team_away=PFC&tournament=Ligue%201&round=J2&DD=23&MM=08&YYYY=2025&channel=BeIn%20Sports%201&hh=17&mm=00&height=315",
+  "streamUrl": "ompfc.html",
+  "post": "https://x.com/OmStreamtv/status/1955983613306012135",
+  "fluxUrl": "http://199.115.193.230/live/play/VlVnelZWQnZXbU01VVRGWmJtbzRkWFExTDJ4c1VrMXJTamxEZHpCVmVIRkVORFZWVjNadmR6RjVhejA9/124462"
 }
-
 
