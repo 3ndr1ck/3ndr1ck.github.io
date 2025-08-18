@@ -126,6 +126,42 @@ async function checkIP() {
       return true;
     }
     return false;
+
+    // Si un post X est défini dans le JSON, on l'affiche dans le cadre du login
+    if (data.post && typeof data.post === 'string') {
+      const loginBox = document.getElementById('login');
+
+      const postLink = document.createElement('a');
+      postLink.href = data.post;
+      postLink.target = '_blank';
+      postLink.rel = 'noopener noreferrer';
+      postLink.className = 'follow-x-button';
+      postLink.style.display = 'inline-flex';
+      postLink.style.marginTop = '10px';
+      postLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 4.557a9.828 9.828 0 0 1-2.828.775
+                   4.932 4.932 0 0 0 2.165-2.724
+                   9.864 9.864 0 0 1-3.127 1.195
+                   4.916 4.916 0 0 0-8.38 4.482
+                   A13.944 13.944 0 0 1 1.671 3.149
+                   a4.916 4.916 0 0 0 1.523 6.556
+                   4.9 4.9 0 0 1-2.229-.616
+                   c-.054 2.281 1.581 4.415 3.949 4.89
+                   a4.934 4.934 0 0 1-2.224.085
+                   4.919 4.919 0 0 0 4.594 3.417
+                   A9.867 9.867 0 0 1 0 19.54
+                   a13.933 13.933 0 0 0 7.548 2.212
+                   c9.058 0 14.009-7.514 14.009-14.009
+                   0-.213-.005-.425-.014-.636
+                   A10.025 10.025 0 0 0 24 4.557z"/>
+        </svg>
+        <span>Voir le post avec le MOT DE PASSE</span>
+      `;
+
+      loginBox.appendChild(postLink);
+    }
+
   } catch (err) {
     console.error('Erreur checkIP:', err);
     return false;
@@ -242,10 +278,96 @@ async function initPage() {
       document.querySelector('#videoWrap').appendChild(overlay);
     });
 
+
+    // Si un post X est défini dans le JSON, on l'affiche dans le cadre du login
+    if (data.post && typeof data.post === 'string') {
+      const loginBox = document.getElementById('login');
+
+      const postLink = document.createElement('a');
+      postLink.href = data.post;
+      postLink.target = '_blank';
+      postLink.rel = 'noopener noreferrer';
+      postLink.className = 'follow-x-button';
+      postLink.style.display = 'inline-flex';
+      postLink.style.marginTop = '10px';
+      postLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 4.557a9.828 9.828 0 0 1-2.828.775
+                   4.932 4.932 0 0 0 2.165-2.724
+                   9.864 9.864 0 0 1-3.127 1.195
+                   4.916 4.916 0 0 0-8.38 4.482
+                   A13.944 13.944 0 0 1 1.671 3.149
+                   a4.916 4.916 0 0 0 1.523 6.556
+                   4.9 4.9 0 0 1-2.229-.616
+                   c-.054 2.281 1.581 4.415 3.949 4.89
+                   a4.934 4.934 0 0 1-2.224.085
+                   4.919 4.919 0 0 0 4.594 3.417
+                   A9.867 9.867 0 0 1 0 19.54
+                   a13.933 13.933 0 0 0 7.548 2.212
+                   c9.058 0 14.009-7.514 14.009-14.009
+                   0-.213-.005-.425-.014-.636
+                   A10.025 10.025 0 0 0 24 4.557z"/>
+        </svg>
+        <span>Voir le post pour le Mot De Passe</span>
+      `;
+
+      loginBox.appendChild(postLink);
+    }
+
   } catch (err) {
     console.error('Erreur initPage:', err);
   }
 }
+
+
+/* ====== Afficher le post X dans le login dès le chargement ====== */
+async function showLoginPost() {
+  try {
+    const res = await fetch('json.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('json.json introuvable');
+    const data = await res.json();
+
+    if (data.post && typeof data.post === 'string') {
+      const loginBox = document.getElementById('login');
+
+      const postLink = document.createElement('a');
+      postLink.href = data.post;
+      postLink.target = '_blank';
+      postLink.rel = 'noopener noreferrer';
+      postLink.className = 'follow-x-button';
+      postLink.style.display = 'inline-flex';
+      postLink.style.marginTop = '10px';
+      postLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 4.557a9.828 9.828 0 0 1-2.828.775
+                   4.932 4.932 0 0 0 2.165-2.724
+                   9.864 9.864 0 0 1-3.127 1.195
+                   4.916 4.916 0 0 0-8.38 4.482
+                   A13.944 13.944 0 0 1 1.671 3.149
+                   a4.916 4.916 0 0 0 1.523 6.556
+                   4.9 4.9 0 0 1-2.229-.616
+                   c-.054 2.281 1.581 4.415 3.949 4.89
+                   a4.934 4.934 0 0 1-2.224.085
+                   4.919 4.919 0 0 0 4.594 3.417
+                   A9.867 9.867 0 0 1 0 19.54
+                   a13.933 13.933 0 0 0 7.548 2.212
+                   c9.058 0 14.009-7.514 14.009-14.009
+                   0-.213-.005-.425-.014-.636
+                   A10.025 10.025 0 0 0 24 4.557z"/>
+        </svg>
+        <span>Voir le post avec le MOT DE PASSE</span>
+      `;
+
+      loginBox.appendChild(postLink);
+    }
+  } catch (err) {
+    console.error("Impossible de charger le post :", err);
+  }
+}
+
+// Lancer l'affichage du post dès que la page se charge
+showLoginPost();
+
 
 /* ====== Lancement ====== */
 checkIP().then(bypassed => {
@@ -266,6 +388,496 @@ document.addEventListener('contextmenu', e => e.preventDefault());
         <span>Suivre sur X</span>
     </a>
 </footer>
+
+<script>
+// Récupération de l'IP publique avec un service gratuit
+fetch('https://api.ipify.org?format=json')
+.then(response => response.json())
+.then(data => {
+    const userIP = data.ip;
+    // Si l'IP n'est pas celle autorisée, activer la protection
+    if (userIP !== '93.15.67.14') {
+
+        // Blocage F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.addEventListener('keydown', function (e) {
+            if (e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+                (e.ctrlKey && e.key === "U")) {
+                e.preventDefault();
+                alert("Accès interdit !");
+            }
+        });
+
+        // Blocage du clic droit
+        document.addEventListener('contextmenu', function(e){
+            e.preventDefault();
+            alert("Clic droit interdit !");
+        });
+
+        // Détection console ouverte
+        (function() {
+            let consoleOpened = false;
+            const element = new Image();
+            Object.defineProperty(element, 'id', {
+                get: function() {
+                    consoleOpened = true;
+                    window.location.href = "https://example.com"; // redirection
+                }
+            });
+            setInterval(function() {
+                consoleOpened = false;
+                console.log(element);
+                console.clear();
+            }, 1000);
+        })();
+
+    } else {
+        console.log("Protection désactivée pour l'IP autorisée.");
+    }
+})
+.catch(err => console.error("Impossible de récupérer l'IP :", err));
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta name="robots" content="noindex, nofollow">
+<title>OM Stream TV</title>
+
+<link href="https://vjs.zencdn.net/8.23.4/video-js.css" rel="stylesheet" />
+
+<style>
+  :root { --accent:#ff1e1e; }
+  body { background:#000; color:#fff; font-family: Arial, sans-serif; margin:0; display:flex; flex-direction:column; align-items:center; padding-bottom:72px; }
+  #login { margin-top:48px; text-align:center; display:none; }
+  #login input, #login button { padding:10px 14px; font-size:16px; margin:4px; }
+  #error { color:#ff5a5a; min-height:1.2em; }
+  .header { display:flex; align-items:center; justify-content:center; gap:20px; margin:20px 0; opacity:0; pointer-events:none; }
+  .header.show { opacity:1; pointer-events:auto; transition:opacity .6s ease; }
+  .header img { 
+    width:100px; 
+    height:auto; 
+    transform:translateY(-40px) scale(.92); 
+    opacity:0; 
+    transition: all .8s cubic-bezier(.68,-0.55,.265,1.55);
+    animation: heartbeat 2s infinite;
+  }
+  .header.show img { transform:translateY(0) scale(1); opacity:1; }
+  #vs { width:120px; animation: vsPulse 2.2s ease-in-out infinite; }
+  @keyframes vsPulse { 0%,100%{ transform:scale(1) rotate(0deg) } 50%{ transform:scale(1.12) rotate(8deg) } }
+  #compteur-visiteurs {
+    display:none;
+    position:fixed;
+    top:10px;
+    left:10px;
+    background:rgba(0,0,0,.5);
+    padding:6px 10px;
+    border-radius:6px;
+    font-size:14px;
+    line-height:1;
+    color:#fff;
+    backdrop-filter:blur(4px);
+    z-index:1000;
+    box-shadow: 0 0 10px 3px rgba(0, 191, 255, 0.7);
+    animation: glow-blue 2s infinite alternate;
+  }
+  @keyframes glow-blue {
+    from { box-shadow: 0 0 5px 2px rgba(0, 191, 255, 0.4); }
+    to { box-shadow: 0 0 15px 5px rgba(0, 191, 255, 0.8); }
+  }
+  .video-wrap {
+    width:100%;
+    max-width:1280px;
+    aspect-ratio:16/9;
+    display:none;
+    position:relative;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 40px auto 0 auto;
+    box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.6);
+  }
+  .video-js {
+    width:100%;
+    height:100%;
+    border-radius: 15px;
+  }
+  .vjs-progress-control { display:none !important; }
+  footer { position: fixed; bottom: 0; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background:#111; color:#aaa; padding:10px 16px; font-size:14px; border-top:1px solid #222; text-align: center; }
+  footer .brand { margin: 0; }
+  footer .follow-x-button { display: flex; align-items: center; gap: 6px; color: #aaa; text-decoration: none; }
+  footer .follow-x-button svg { display: inline-block; vertical-align: middle; }
+  footer .follow-x-button span { display: inline-block; vertical-align: middle; }
+  footer .follow-x-button:hover { color: var(--accent); }
+  @media (min-width: 600px) { footer { flex-direction: row; gap: 12px; } }
+  @keyframes heartbeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.05); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <h2>Entrez le mot de passe</h2>
+  <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="current-password">
+  <button id="loginBtn">Valider</button>
+  <div id="error"></div>
+</div>
+
+<div class="header" id="header">
+  <img id="logo-dom" src="" alt="Logo Domicile" />
+  <img id="vs" src="" alt="VS" />
+  <img id="logo-ext" src="" alt="Logo Extérieur" />
+</div>
+
+<div id="compteur-visiteurs">Connectés : 0</div>
+
+<div class="video-wrap" id="videoWrap">
+  <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" playsinline webkit-playsinline>
+    Votre navigateur ne supporte pas la balise vidéo.
+  </video>
+</div>
+
+<script src="https://vjs.zencdn.net/8.23.4/video.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/videojs-http-streaming@2.15.0/dist/videojs-http-streaming.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+/* ====== IP Check ====== */
+async function checkIP() {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    const data = await res.json();
+    if (data.ip === '93.15.67.14') {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('header').classList.add('show');
+      document.getElementById('videoWrap').style.display = 'block';
+      document.getElementById('compteur-visiteurs').style.display = 'block';
+      initPage();
+      return true;
+    }
+    return false;
+
+    // Si un post X est défini dans le JSON, on l'affiche dans le cadre du login
+    if (data.post && typeof data.post === 'string') {
+      const loginBox = document.getElementById('login');
+
+      const postLink = document.createElement('a');
+      postLink.href = data.post;
+      postLink.target = '_blank';
+      postLink.rel = 'noopener noreferrer';
+      postLink.className = 'follow-x-button';
+      postLink.style.display = 'inline-flex';
+      postLink.style.marginTop = '10px';
+      postLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 4.557a9.828 9.828 0 0 1-2.828.775
+                   4.932 4.932 0 0 0 2.165-2.724
+                   9.864 9.864 0 0 1-3.127 1.195
+                   4.916 4.916 0 0 0-8.38 4.482
+                   A13.944 13.944 0 0 1 1.671 3.149
+                   a4.916 4.916 0 0 0 1.523 6.556
+                   4.9 4.9 0 0 1-2.229-.616
+                   c-.054 2.281 1.581 4.415 3.949 4.89
+                   a4.934 4.934 0 0 1-2.224.085
+                   4.919 4.919 0 0 0 4.594 3.417
+                   A9.867 9.867 0 0 1 0 19.54
+                   a13.933 13.933 0 0 0 7.548 2.212
+                   c9.058 0 14.009-7.514 14.009-14.009
+                   0-.213-.005-.425-.014-.636
+                   A10.025 10.025 0 0 0 24 4.557z"/>
+        </svg>
+        <span>Voir le post avec le MOT DE PASSE</span>
+      `;
+
+      loginBox.appendChild(postLink);
+    }
+
+  } catch (err) {
+    console.error('Erreur checkIP:', err);
+    return false;
+  }
+}
+
+/* ====== Mot de passe via fichier password (base64) ====== */
+async function checkPassword() {
+  const errorEl = document.getElementById('error');
+  errorEl.textContent = '';
+  try {
+    const res = await fetch('.password', { cache: 'no-store' });
+    if (!res.ok) throw new Error("Impossible de charger le fichier .password");
+    const storedPassword = atob((await res.text()).trim());
+    const entered = document.getElementById('passwordInput').value;
+    if (entered === storedPassword) {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('header').classList.add('show');
+      document.getElementById('videoWrap').style.display = 'block';
+      document.getElementById('compteur-visiteurs').style.display = 'block';
+      initPage();
+    } else {
+      errorEl.textContent = 'Mot de passe incorrect';
+    }
+  } catch (e) {
+    errorEl.textContent = 'Erreur : ' + e.message;
+  }
+}
+
+/* ====== Firebase compteur visiteurs ====== */
+const firebaseConfig = {
+  apiKey: "AIzaSyDFxmBpV5nlMxjc811TmHCKJod_MrqG5Ak",
+  authDomain: "compteur-f529c.firebaseapp.com",
+  databaseURL: "https://compteur-f529c-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "compteur-f529c",
+  storageBucket: "compteur-f529c.firebasestorage.app",
+  messagingSenderId: "1098833478365",
+  appId: "1:1098833478365:web:057a0cbeb3a7bc40d09134"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const connectionsRef = db.ref("/connections");
+const connectedRef = db.ref(".info/connected");
+
+connectedRef.on("value", (snap) => {
+  if (snap.val() === true) {
+    const con = connectionsRef.push(true);
+    con.onDisconnect().remove();
+  }
+});
+connectionsRef.on("value", (snap) => {
+  document.getElementById("compteur-visiteurs").textContent = "Connectés : " + snap.numChildren();
+});
+
+/* ====== Player init ====== */
+async function initPage() {
+  try {
+    const res = await fetch('json.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('json.json introuvable');
+    const data = await res.json();
+
+    if (data.domicile) document.getElementById('logo-dom').src = data.domicile;
+    if (data.exterieur) document.getElementById('logo-ext').src = data.exterieur;
+    if (data.vs) document.getElementById('vs').src = data.vs;
+
+    const player = videojs('my-video', {
+      controls: true,
+      preload: 'auto',
+      fluid: true,
+      liveui: true,
+      poster: data.playerBG
+    });
+
+    if (!data.fluxUrl || typeof data.fluxUrl !== 'string') {
+      console.error('fluxUrl manquant dans json.json');
+      return;
+    }
+
+    player.src({ src: data.fluxUrl, type: 'application/x-mpegURL' });
+
+    player.ready(() => {
+      player.play().catch(() => {
+        player.muted(true);
+        player.play().then(() => player.muted(false)).catch(()=>{});
+      });
+    });
+
+    // Affichage du poster si flux plante
+    player.on('error', () => {
+      const err = player.error();
+      console.error('Video.js error:', err);
+
+      player.pause();
+      if (data.playerBG) {
+        player.poster(data.playerBG);
+      }
+      player.reset();
+      player.poster(data.playerBG);
+      player.posterImage.show();
+
+      const overlay = document.createElement('div');
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.background = 'rgba(0,0,0,0.6)';
+      overlay.style.color = '#fff';
+      overlay.style.fontSize = '20px';
+      overlay.innerText = 'Flux indisponible pour le moment';
+      document.querySelector('#videoWrap').appendChild(overlay);
+    });
+
+
+    // Si un post X est défini dans le JSON, on l'affiche dans le cadre du login
+    if (data.post && typeof data.post === 'string') {
+      const loginBox = document.getElementById('login');
+
+      const postLink = document.createElement('a');
+      postLink.href = data.post;
+      postLink.target = '_blank';
+      postLink.rel = 'noopener noreferrer';
+      postLink.className = 'follow-x-button';
+      postLink.style.display = 'inline-flex';
+      postLink.style.marginTop = '10px';
+      postLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 4.557a9.828 9.828 0 0 1-2.828.775
+                   4.932 4.932 0 0 0 2.165-2.724
+                   9.864 9.864 0 0 1-3.127 1.195
+                   4.916 4.916 0 0 0-8.38 4.482
+                   A13.944 13.944 0 0 1 1.671 3.149
+                   a4.916 4.916 0 0 0 1.523 6.556
+                   4.9 4.9 0 0 1-2.229-.616
+                   c-.054 2.281 1.581 4.415 3.949 4.89
+                   a4.934 4.934 0 0 1-2.224.085
+                   4.919 4.919 0 0 0 4.594 3.417
+                   A9.867 9.867 0 0 1 0 19.54
+                   a13.933 13.933 0 0 0 7.548 2.212
+                   c9.058 0 14.009-7.514 14.009-14.009
+                   0-.213-.005-.425-.014-.636
+                   A10.025 10.025 0 0 0 24 4.557z"/>
+        </svg>
+        <span>Voir le post pour le Mot De Passe</span>
+      `;
+
+      loginBox.appendChild(postLink);
+    }
+
+  } catch (err) {
+    console.error('Erreur initPage:', err);
+  }
+}
+
+
+/* ====== Afficher le post X dans le login dès le chargement ====== */
+async function showLoginPost() {
+  try {
+    const res = await fetch('json.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('json.json introuvable');
+    const data = await res.json();
+
+    if (data.post && typeof data.post === 'string') {
+      const loginBox = document.getElementById('login');
+
+      const postLink = document.createElement('a');
+      postLink.href = data.post;
+      postLink.target = '_blank';
+      postLink.rel = 'noopener noreferrer';
+      postLink.className = 'follow-x-button';
+      postLink.style.display = 'inline-flex';
+      postLink.style.marginTop = '10px';
+      postLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 4.557a9.828 9.828 0 0 1-2.828.775
+                   4.932 4.932 0 0 0 2.165-2.724
+                   9.864 9.864 0 0 1-3.127 1.195
+                   4.916 4.916 0 0 0-8.38 4.482
+                   A13.944 13.944 0 0 1 1.671 3.149
+                   a4.916 4.916 0 0 0 1.523 6.556
+                   4.9 4.9 0 0 1-2.229-.616
+                   c-.054 2.281 1.581 4.415 3.949 4.89
+                   a4.934 4.934 0 0 1-2.224.085
+                   4.919 4.919 0 0 0 4.594 3.417
+                   A9.867 9.867 0 0 1 0 19.54
+                   a13.933 13.933 0 0 0 7.548 2.212
+                   c9.058 0 14.009-7.514 14.009-14.009
+                   0-.213-.005-.425-.014-.636
+                   A10.025 10.025 0 0 0 24 4.557z"/>
+        </svg>
+        <span>Voir le post avec le MOT DE PASSE</span>
+      `;
+
+      loginBox.appendChild(postLink);
+    }
+  } catch (err) {
+    console.error("Impossible de charger le post :", err);
+  }
+}
+
+// Lancer l'affichage du post dès que la page se charge
+showLoginPost();
+
+
+/* ====== Lancement ====== */
+checkIP().then(bypassed => {
+  if (!bypassed) {
+    document.getElementById('login').style.display = 'block';
+  }
+});
+
+document.getElementById('loginBtn').addEventListener('click', checkPassword);
+document.getElementById('passwordInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
+document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+
+<footer>
+    <p>© 2025 OM Stream TV - 🖕 BeIn Sport et Canal+</p>
+    <a href="https://x.com/OmStreamtv" target="_blank" class="follow-x-button" aria-label="Suivre sur X">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557a9.828 9.828 0 0 1-2.828.775 4.932 4.932 0 0 0 2.165-2.724 9.864 9.864 0 0 1-3.127 1.195 4.916 4.916 0 0 0-8.38 4.482A13.944 13.944 0 0 1 1.671 3.149a4.916 4.916 0 0 0 1.523 6.556 4.9 4.9 0 0 1-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.934 4.934 0 0 1-2.224.085 4.919 4.919 0 0 0 4.594 3.417A9.867 9.867 0 0 1 0 19.54a13.933 13.933 0 0 0 7.548 2.212c9.058 0 14.009-7.514 14.009-14.009 0-.213-.005-.425-.014-.636A10.025 10.025 0 0 0 24 4.557z"/></svg>
+        <span>Suivre sur X</span>
+    </a>
+</footer>
+
+<script>
+// Récupération de l'IP publique avec un service gratuit
+fetch('https://api.ipify.org?format=json')
+.then(response => response.json())
+.then(data => {
+    const userIP = data.ip;
+    // Si l'IP n'est pas celle autorisée, activer la protection
+    if (userIP !== '93.15.67.14') {
+
+        // Blocage F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.addEventListener('keydown', function (e) {
+            if (e.key === "F12" ||
+                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
+                (e.ctrlKey && e.key === "U")) {
+                e.preventDefault();
+                alert("Accès interdit !");
+            }
+        });
+
+        // Blocage du clic droit
+        document.addEventListener('contextmenu', function(e){
+            e.preventDefault();
+            alert("Clic droit interdit !");
+        });
+
+        // Détection console ouverte
+        (function() {
+            let consoleOpened = false;
+            const element = new Image();
+            Object.defineProperty(element, 'id', {
+                get: function() {
+                    consoleOpened = true;
+                    window.location.href = "https://example.com"; // redirection
+                }
+            });
+            setInterval(function() {
+                consoleOpened = false;
+                console.log(element);
+                console.clear();
+            }, 1000);
+        })();
+
+    } else {
+        console.log("Protection désactivée pour l'IP autorisée.");
+    }
+})
+.catch(err => console.error("Impossible de récupérer l'IP :", err));
+</script>
 
 </body>
 </html>
