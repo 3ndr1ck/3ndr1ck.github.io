@@ -5,22 +5,33 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function init() {
-    // Chargement JSON (images, logo)
+    // Chargement JSON (images, logo) via le script PHP sécurisé
     try {
-        const res = await fetch('json.json');
-        if (!res.ok) throw new Error('Erreur chargement json.json');
+        // Nouvelle ligne pour appeler le script PHP
+        const res = await fetch('/json.php'); 
+        if (!res.ok) throw new Error('Erreur chargement via json.php');
         const data = await res.json();
+
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        // Décoder la chaîne Base64 pour obtenir les données JSON d'origine
+        const decodedData = atob(data.data);
+        const jsonData = JSON.parse(decodedData);
+
         const matchImage = document.getElementById('match-image');
         const logoOm = document.getElementById('logo-om');
         const preloadImage = document.getElementById('preload-image');
 
-        if (matchImage && data["match-image"]) matchImage.src = data["match-image"];
-        if (logoOm && data["logo_om"]) logoOm.src = data["logo_om"];
-        if (preloadImage && data["match-image"]) preloadImage.href = data["match-image"];
+        if (matchImage && jsonData["match-image"]) matchImage.src = jsonData["match-image"];
+        if (logoOm && jsonData["logo_om"]) logoOm.src = jsonData["logo_om"];
+        if (preloadImage && jsonData["match-image"]) preloadImage.href = jsonData["match-image"];
     } catch (err) {
         console.error('Erreur chargement JSON :', err);
     }
 
+    // Le reste du code est inchangé
     // Popup handling
     const popup = document.getElementById('popup');
     const popupClose = document.getElementById('popup-close');

@@ -16,12 +16,20 @@ async function getIp() {
   }
 }
 
-// Charger le fichier JSON et initialiser
-fetch('../json.json')
+// Charger les données JSON via le script PHP sécurisé et initialiser
+fetch('/json.php')
   .then(response => response.json())
   .then(async data => {
-    streamUrl = data.streamUrl;
-    eventDateJson = data;
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    
+    // Décoder la chaîne Base64 pour obtenir les données JSON d'origine
+    const decodedData = atob(data.data);
+    const jsonData = JSON.parse(decodedData);
+
+    streamUrl = jsonData.streamUrl;
+    eventDateJson = jsonData;
 
     const ip = await getIp();
 
