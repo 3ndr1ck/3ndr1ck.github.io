@@ -22,12 +22,17 @@ async function checkIP() {
 async function checkPassword() {
   const errorEl = document.getElementById('error');
   errorEl.textContent = '';
+  const entered = document.getElementById('passwordInput').value;
+
   try {
-    const res = await fetch('.password', { cache: 'no-store' });
-    if (!res.ok) throw new Error("Impossible de charger le fichier .password");
-    const storedPassword = atob((await res.text()).trim());
-    const entered = document.getElementById('passwordInput').value;
-    if (entered === storedPassword) {
+    const res = await fetch('checkPassword.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ password: entered })
+    });
+    const data = await res.json();
+
+    if (data.success) {
       document.getElementById('login').style.display = 'none';
       document.getElementById('header').classList.add('show');
       document.getElementById('videoWrap').style.display = 'block';
