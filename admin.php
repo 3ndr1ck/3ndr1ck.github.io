@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         padding: 30px 40px;
         border-radius: 15px;
         box-shadow: 0 0 30px rgba(0,183,255,0.5);
-        width: 420px;
+        width: 500px;
         text-align: center;
     }
     h2 {
@@ -246,3 +246,4 @@ function updateLogo(selectId, previewId) {
 </div>
 </body>
 </html>
+
