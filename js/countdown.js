@@ -4,19 +4,31 @@ let countdownInterval;
 let streamUrl;
 let eventDateJson;
 
-// Récupération de l'IP publique
-async function getIp() {
+// Récupérer l'IP du visiteur via le service externe ipify.org
+async function getVisitorIp() {
   try {
     const res = await fetch('https://api.ipify.org?format=json');
     const data = await res.json();
     return data.ip;
   } catch (err) {
-    console.error('Erreur récupération IP :', err);
+    console.error('Erreur récupération IP visiteur :', err);
     return null;
   }
 }
 
-// Charger les données JSON via le script PHP sécurisé et initialiser
+// Récupérer l'IP de référence (celle qui autorise l'accès) via votre script ip.php
+async function getAuthorizedIp() {
+  try {
+    const res = await fetch('/ip.php');
+    const data = await res.json();
+    return data.ip;
+  } catch (err) {
+    console.error('Erreur récupération IP autorisée :', err);
+    return null;
+  }
+}
+
+// Charger les données JSON et initialiser le programme
 fetch('/json.php')
   .then(response => response.json())
   .then(async data => {
@@ -24,17 +36,18 @@ fetch('/json.php')
       throw new Error(data.error);
     }
     
-    // Décoder la chaîne Base64 pour obtenir les données JSON d'origine
     const decodedData = atob(data.data);
     const jsonData = JSON.parse(decodedData);
 
     streamUrl = jsonData.streamUrl;
     eventDateJson = jsonData;
 
-    const ip = await getIp();
+    // Récupérer les deux adresses IP en parallèle
+    const visitorIp = await getVisitorIp();
+    const authorizedIp = await getAuthorizedIp();
 
-    if (ip === "93.15.67.14") {
-      // Si IP correspond, afficher directement le bouton
+    if (visitorIp === authorizedIp) {
+      // Si l'IP du visiteur correspond à l'IP autorisée, afficher le bouton
       showStreamButton();
     } else {
       // Sinon, lancer le compte à rebours
@@ -91,19 +104,19 @@ function initCountdown() {
     const secondes = String(Math.floor(diff.seconds)).padStart(2, '0');
 
     compte_a_rebours.innerHTML = `
-      <div class="countdown-unit">
+      <div class="countdown-unit" style="text-align: center;">
         <div class="countdown-value">${jours}</div>
         <div class="countdown-label">Jours</div>
       </div>
-      <div class="countdown-unit">
+      <div class="countdown-unit" style="text-align: center;">
         <div class="countdown-value">${heures}</div>
         <div class="countdown-label">Heures</div>
       </div>
-      <div class="countdown-unit">
+      <div class="countdown-unit" style="text-align: center;">
         <div class="countdown-value">${minutes}</div>
         <div class="countdown-label">Minutes</div>
       </div>
-      <div class="countdown-unit">
+      <div class="countdown-unit" style="text-align: center;">
         <div class="countdown-value">${secondes}</div>
         <div class="countdown-label">Secondes</div>
       </div>

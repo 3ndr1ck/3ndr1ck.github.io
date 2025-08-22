@@ -4,10 +4,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('contextmenu', e => e.preventDefault());
 });
 
+// Récupérer l'IP du visiteur via le service externe ipify.org
+async function getVisitorIp() {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    const data = await res.json();
+    return data.ip;
+  } catch (err) {
+    console.error('Erreur récupération IP visiteur :', err);
+    return null;
+  }
+}
+
+// Récupérer l'IP de référence (celle qui autorise l'accès) via votre script ip.php
+async function getAuthorizedIp() {
+  try {
+    const res = await fetch('/ip.php');
+    const data = await res.json();
+    return data.ip;
+  } catch (err) {
+    console.error('Erreur récupération IP autorisée :', err);
+    return null;
+  }
+}
+
 async function init() {
     // Chargement JSON (images, logo) via le script PHP sécurisé
     try {
-        // Nouvelle ligne pour appeler le script PHP
         const res = await fetch('/json.php'); 
         if (!res.ok) throw new Error('Erreur chargement via json.php');
         const data = await res.json();
@@ -30,6 +53,9 @@ async function init() {
     } catch (err) {
         console.error('Erreur chargement JSON :', err);
     }
+
+    // Ajout de la vérification de l'IP et affichage du bouton admin
+    await checkAndDisplayAdminButton();
 
     // Le reste du code est inchangé
     // Popup handling
@@ -120,49 +146,27 @@ async function init() {
         console.error('Erreur compteur Firebase :', e);
     }
 }
-// Récupération de l'IP publique avec un service gratuit
-fetch('https://api.ipify.org?format=json')
-.then(response => response.json())
-.then(data => {
-    const userIP = data.ip;
-    // Si l'IP n'est pas celle autorisée, activer la protection
-    if (userIP !== '93.15.67.14') {
 
-        // Blocage F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-        document.addEventListener('keydown', function (e) {
-            if (e.key === "F12" ||
-                (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-                (e.ctrlKey && e.key === "U")) {
-                e.preventDefault();
-                alert("Accès interdit !");
-            }
-        });
+async function checkAndDisplayAdminButton() {
+    try {
+        const visitorIp = await getVisitorIp();
+        const authorizedIp = await getAuthorizedIp();
 
-        // Blocage du clic droit
-        document.addEventListener('contextmenu', function(e){
-            e.preventDefault();
-            alert("Clic droit interdit !");
-        });
-
-        // Détection console ouverte
-        (function() {
-            let consoleOpened = false;
-            const element = new Image();
-            Object.defineProperty(element, 'id', {
-                get: function() {
-                    consoleOpened = true;
-                    window.location.href = "https://example.com"; // redirection
-                }
-            });
-            setInterval(function() {
-                consoleOpened = false;
-                console.log(element);
-                console.clear();
-            }, 1000);
-        })();
-
-    } else {
-        console.log("Protection désactivée pour l'IP autorisée.");
+        if (visitorIp === authorizedIp) {
+            console.log("IP autorisée détectée. Affichage du bouton admin.");
+            const compteurEl = document.getElementById("compteur-visiteurs");
+            const adminButton = document.createElement("a");
+            adminButton.href = "http://vpsfyhi.cluster029.hosting.ovh.net/admin.php";
+            adminButton.textContent = "Admin";
+            adminButton.style.marginLeft = "10px";
+            adminButton.style.padding = "5px 10px";
+            adminButton.style.backgroundColor = "green";
+            adminButton.style.color = "white";
+            adminButton.style.textDecoration = "none";
+            adminButton.style.borderRadius = "5px";
+            compteurEl.appendChild(adminButton);
+        }
+    } catch (err) {
+        console.error("Impossible d'afficher le bouton admin :", err);
     }
-})
-.catch(err => console.error("Impossible de récupérer l'IP :", err));
+}
