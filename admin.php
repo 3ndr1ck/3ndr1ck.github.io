@@ -1,21 +1,34 @@
 <?php
 // Fichier JSON
 $jsonFile = '/home/vpsfyhi/json.json'; 
+// Fichier mot de passe
+$passwordFile = '/home/vpsfyhi/.password';
 $message = '';
 
 // On inclut le fichier qui contient la liste complète des équipes
 include 'teams.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $msgs = [];
+
+    // Traitement du mot de passe
+    $password = trim($_POST['password'] ?? '');
+    if (!empty($password)) {
+        if (file_put_contents($passwordFile, password_hash($password, PASSWORD_DEFAULT), LOCK_EX)) {
+            $msgs[] = "✅ Mot de passe mis à jour.";
+        } else {
+            $msgs[] = "⚠️ Erreur lors de l'écriture du mot de passe.";
+        }
+    }
+
+    // Traitement des autres champs (json.json)
     if (!file_exists($jsonFile)) {
-        $message = "Fichier JSON introuvable : $jsonFile";
+        $msgs[] = "Fichier JSON introuvable : $jsonFile";
     } else {
         $jsonData = json_decode(file_get_contents($jsonFile), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $message = "Erreur lecture JSON : " . json_last_error_msg();
+            $msgs[] = "Erreur lecture JSON : " . json_last_error_msg();
         } else {
-            $msgs = [];
-
             // fluxUrl
             $fluxUrl = trim($_POST['fluxUrl'] ?? '');
             if (!empty($fluxUrl)) {
@@ -35,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $readQuery['height'] = 315;
                     $newReadUrl = $readParts['scheme'] . '://' . $readParts['host'] . $readParts['path'] . '?' . http_build_query($readQuery);
                     $jsonData['match-image'] = $newReadUrl;
+                    $jsonData['playerBG'] = $newReadUrl;
                     $msgs[] = "✅ match-image mis à jour : <code>$newReadUrl</code>";
                 } else {
                     $msgs[] = "⚠️ Paramètre read introuvable pour match-image.";
@@ -84,17 +98,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // sauvegarde
-            if (!empty($msgs)) {
+            // sauvegarde des données JSON si des champs ont été mis à jour
+            if (count($msgs) > 0) { // Si des messages ont été ajoutés pour d'autres champs que le mot de passe
                 if (file_put_contents($jsonFile, json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX)) {
-                    $message = implode("<br>", $msgs);
+                    // Le message sera construit après
                 } else {
-                    $message = "Erreur lors de l'écriture dans le JSON.";
+                    $msgs[] = "Erreur lors de l'écriture dans le JSON.";
                 }
-            } else {
-                $message = "⚠️ Aucun champ rempli.";
             }
         }
+    }
+    
+    // Construction du message final
+    if (!empty($msgs)) {
+        $message = implode("<br>", $msgs);
+    } else {
+        $message = "⚠️ Aucun champ rempli.";
     }
 }
 ?>
@@ -135,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         filter: drop-shadow(0 0 15px #00b7ff);
     }
     label { display: block; margin-top: 15px; font-weight: bold; text-align:left; }
-    input[type=text], input[type=datetime-local], select {
+    input[type=text], input[type=datetime-local], input[type=password], select {
         width: 100%;
         padding: 8px;
         margin-top: 5px;
@@ -184,24 +203,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         filter: drop-shadow(0 0 5px #00b7ff);
     }
 </style>
-<script>
-function updateLogo(selectId, previewId) {
-    let team = document.getElementById(selectId).value;
-    let preview = document.getElementById(previewId);
-    if (team) {
-        let url = "https://om-sup.ovh/team/" + encodeURIComponent(team) + ".png";
-        preview.innerHTML = '<img src="' + url + '" alt="Logo ' + team + '">';
-    } else {
-        preview.innerHTML = '';
-    }
-}
-</script>
+<script src="/js/admin.js"></script>
 </head>
 <body>
 <div class="container">
     <img src="https://om-sup.ovh/team/OM.png" alt="Logo OM" class="logo">
     <h2>Mettre à jour JSON - OM</h2>
     <form method="post">
+        <label>Mot de passe:</label>
+        <input type="password" name="password" placeholder="Nouveau mot de passe">
+        
         <label>Date début stream :</label>
         <input type="datetime-local" name="date_debut_stream">
 
@@ -209,7 +220,7 @@ function updateLogo(selectId, previewId) {
         <input type="text" name="matchImage" placeholder="URL affiche match">
 
         <label>Page du Match :</label>
-        <input type="text" name="fluxUrl" placeholder="Nom page du match">
+        <input type="text" name="streamUrl" placeholder="Nom page du match">
 
         <label>Logo domicile :</label>
         <select name="domicile" id="domicile" onchange="updateLogo('domicile','preview_domicile')">
@@ -233,7 +244,7 @@ function updateLogo(selectId, previewId) {
         <input type="text" name="post" placeholder="URL du post MDP">
 
         <label>Flux Stream:</label>
-        <input type="text" name="streamUrl" placeholder="URL du stream">
+        <input type="text" name="fluxUrl" placeholder="URL du stream">
 
         <div class="btn-container">
             <button type="submit">Injection</button>
@@ -246,4 +257,3 @@ function updateLogo(selectId, previewId) {
 </div>
 </body>
 </html>
-
