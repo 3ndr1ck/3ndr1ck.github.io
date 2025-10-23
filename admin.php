@@ -29,44 +29,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (json_last_error() !== JSON_ERROR_NONE) {
             $msgs[] = "Erreur lecture JSON : " . json_last_error_msg();
         } else {
-            // fluxUrl
-            $fluxUrl = trim($_POST['fluxUrl'] ?? '');
-            if (!empty($fluxUrl)) {
-                $jsonData['fluxUrl'] = $fluxUrl;
-                $msgs[] = "✅ fluxUrl mis à jour : <code>$fluxUrl</code>";
-            }
-
-            // match-image
-            $matchUrl = trim($_POST['matchImage'] ?? '');
-            if (!empty($matchUrl)) {
-                $parts = parse_url($matchUrl);
-                parse_str($parts['query'] ?? '', $queryParams);
-                if (!empty($queryParams['read'])) {
-                    $readUrl = urldecode($queryParams['read']);
-                    $readParts = parse_url($readUrl);
-                    parse_str($readParts['query'] ?? '', $readQuery);
-                    $readQuery['height'] = 315;
-                    $newReadUrl = $readParts['scheme'] . '://' . $readParts['host'] . $readParts['path'] . '?' . http_build_query($readQuery);
-                    $jsonData['match-image'] = $newReadUrl;
-                    $jsonData['playerBG'] = $newReadUrl;
-                    $msgs[] = "✅ match-image mis à jour : <code>$newReadUrl</code>";
-                } else {
-                    $msgs[] = "⚠️ Paramètre read introuvable pour match-image.";
-                }
-            }
-
             // domicile et exterieur via menus déroulants
             $domicile = trim($_POST['domicile'] ?? '');
             if (!empty($domicile)) {
                 $url = "https://om-sup.ovh/team/" . rawurlencode($domicile) . ".png";
                 $jsonData['domicile'] = $url;
-                $msgs[] = "✅ domicile mis à jour : <code>$url</code>";
+                $msgs[] = "✅ domicile mis à jour";
             }
             $exterieur = trim($_POST['exterieur'] ?? '');
             if (!empty($exterieur)) {
                 $url = "https://om-sup.ovh/team/" . rawurlencode($exterieur) . ".png";
                 $jsonData['exterieur'] = $url;
-                $msgs[] = "✅ exterieur mis à jour : <code>$url</code>";
+                $msgs[] = "✅ exterieur mis à jour";
             }
 
             // autres champs simples
@@ -78,6 +52,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $msgs[] = "✅ $field mis à jour : <code>$val</code>";
                 }
             }
+// --- GÉNÉRATION AUTO DU match-image À PARTIR DE domicile + exterieur ---
+$domicile  = trim($_POST['domicile']  ?? '');
+$exterieur = trim($_POST['exterieur'] ?? '');
+
+// Conserve aussi tes URLs d'écussons comme avant
+if (!empty($domicile)) {
+    $url = "https://om-sup.ovh/team/" . rawurlencode($domicile) . ".png";
+    $jsonData['domicile'] = $url;
+}
+if (!empty($exterieur)) {
+    $url = "https://om-sup.ovh/team/" . rawurlencode($exterieur) . ".png";
+    $jsonData['exterieur'] = $url;
+}
+
+// Si les deux équipes sont renseignées, on fabrique l'URL match-image
+if (!empty($domicile) && !empty($exterieur)) {
+    // Récupère éventuellement les champs de date/heure/compétition s'ils existent dans ton <form>
+    $DD        = trim($_POST['DD']        ?? '');
+    $MM        = trim($_POST['MM']        ?? '');
+    $YYYY      = trim($_POST['YYYY']      ?? '');
+    $hh        = trim($_POST['hh']        ?? '');
+    $mm        = trim($_POST['mm']        ?? '');
+    $tournament= trim($_POST['tournament']?? '');
+    $round     = trim($_POST['round']     ?? '');
+    $channel   = trim($_POST['channel']   ?? '');
+    $height    = trim($_POST['height']    ?? '');
+
+    // Valeurs par défaut si non fournies (Europe/Paris) + height=315
+    if ($DD === '' || $MM === '' || $YYYY === '' || $hh === '' || $mm === '') {
+        $tz  = new DateTimeZone('Europe/Paris');
+        $now = new DateTime('now', $tz);
+        $DD   = $DD   !== '' ? $DD   : $now->format('d');
+        $MM   = $MM   !== '' ? $MM   : $now->format('m');
+        $YYYY = $YYYY !== '' ? $YYYY : $now->format('Y');
+        $hh   = $hh   !== '' ? $hh   : $now->format('H');
+        $mm   = $mm   !== '' ? $mm   : $now->format('i');
+    }
+    if ($height === '') {
+        $height = '315';
+    }
+
+    // Requête interne "read" (non encodée)
+    $readQuery = [
+        'team_home' => $domicile,
+        'team_away' => $exterieur,
+        'tournament'=> $tournament,
+        'round'     => $round,
+        'DD'        => $DD,
+        'MM'        => $MM,
+        'YYYY'      => $YYYY,
+        'channel'   => $channel,
+        'hh'        => $hh,
+        'mm'        => $mm,
+        'height'    => $height,
+    ];
+
+    // ✅ URL interne en clair (non encodée, sans ?read=)
+    $innerReadUrl = 'https://om-sup.ovh/prez/?' . http_build_query($readQuery);
+
+    // Alimente tes champs JSON avec l’URL en clair
+    $jsonData['match-image'] = $innerReadUrl;
+    $jsonData['playerBG']    = $innerReadUrl;
+
+    $msgs[] = "✅ match-image mis à jour";
+}
 
             // date debut stream via input datetime-local
             $dateInput = trim($_POST['date_debut_stream'] ?? '');
@@ -210,17 +249,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <img src="https://om-sup.ovh/team/OM.png" alt="Logo OM" class="logo">
     <h2>Mettre à jour JSON - OM</h2>
     <form method="post">
-        <label>Mot de passe:</label>
-        <input type="password" name="password" placeholder="Nouveau mot de passe">
-        
         <label>Date début stream :</label>
         <input type="datetime-local" name="date_debut_stream">
-
-        <label>Affiche du Match:</label>
-        <input type="text" name="matchImage" placeholder="URL affiche match">
-
-        <label>Page du Match :</label>
-        <input type="text" name="streamUrl" placeholder="Nom page du match">
 
         <label>Logo domicile :</label>
         <select name="domicile" id="domicile" onchange="updateLogo('domicile','preview_domicile')">
@@ -240,20 +270,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </select>
         <div class="preview" id="preview_exterieur"></div>
 
+        <label>Page du Match :</label>
+        <input type="text" name="streamUrl" placeholder="Nom page du match">
+
+        <label>Mot de passe:</label>
+        <input type="password" name="password" placeholder="Nouveau mot de passe">
+
         <label>post X :</label>
         <input type="text" name="post" placeholder="URL du post MDP">
-
-        <label>Flux Stream:</label>
-        <input type="text" name="fluxUrl" placeholder="URL du stream">
 
         <div class="btn-container">
             <button type="submit">Injection</button>
         </div>
+        <!-- Bouton Retour -->
+<div style="text-align: center; margin-top: 40px;">
+  <a href="index.html"
+     style="
+       display: inline-block;
+       padding: 10px 20px;
+       background-color: green;
+       color: white;
+       text-decoration: none;
+       border-radius: 5px;
+       font-weight: bold;
+       transition: all 0.2s ease;
+     "
+     onmouseover="this.style.backgroundColor='#28b528'"
+     onmouseout="this.style.backgroundColor='green'">
+     ← Retour
+  </a>
+</div>
     </form>
 
     <?php if (!empty($message)): ?>
         <div class="msg"><?= $message ?></div>
     <?php endif; ?>
 </div>
+
 </body>
 </html>

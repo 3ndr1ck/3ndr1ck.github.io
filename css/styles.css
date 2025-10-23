@@ -50,3 +50,46 @@ footer .follow-x-button:hover { color:var(--accent); }
   0%,50%,100% { transform:scale(1); }
   25%,75% { transform:scale(1.05); }
 }
+
+/* ====== Ajouts mobile-first (iOS/Android) ====== */
+:root{
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+html, body { height: 100%; -webkit-text-size-adjust: 100%; }
+body { padding-bottom: calc(72px + var(--safe-bottom)); }
+
+/* Meilleures cibles tactiles */
+#login input, #login button{ min-height: 44px; border-radius: 12px; }
+#login input{ width: min(560px, 90vw); background:#0d0d0d; color:#fff; border:1px solid #222; }
+#login button{ background: var(--accent); color:#fff; border:0; font-weight:600; }
+
+/* Wrapper vidéo : support id ou class */
+#videoWrap, .video-wrap{
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  background:#000;
+}
+
+/* Overlay et bouton Unmute (créés par JS) */
+#video-overlay{
+  position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.55); color:#fff; font-size:16px; padding:12px; text-align:center; z-index:5;
+}
+#unmute-btn{ user-select:none; }
+
+/* Footer: gère encoche iOS */
+footer{ padding-bottom: calc(10px + var(--safe-bottom)); }
+
+/* Réduction des effets si préférence */
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; }
+}
+
+/* Paysage étroit (petites hauteurs) */
+@media (max-height: 540px){
+  .header{ display:none !important; }
+  .video-wrap, #videoWrap{ margin-top:10px; }
+}
