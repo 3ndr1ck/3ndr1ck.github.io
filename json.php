@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 // Assurez-vous que le chemin vers votre fichier JSON est correct
 // et qu'il n'est pas accessible directement par le navigateur.
-$jsonFile = '/home/vpsfyhi/json.json'; 
+$jsonFile = 'json.json'; 
 
 if (file_exists($jsonFile)) {
     $jsonData = file_get_contents($jsonFile);
@@ -13,4 +13,5 @@ if (file_exists($jsonFile)) {
 } else {
     echo json_encode(['error' => 'Fichier de données introuvable.']);
 }
+
 ?>
