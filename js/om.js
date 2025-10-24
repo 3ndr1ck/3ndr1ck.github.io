@@ -158,7 +158,7 @@ async function checkAndDisplayAdminButton() {
 
             // --- Bouton Admin ---
             const adminButton = document.createElement("a");
-            adminButton.href = "http://vpsfyhi.cluster029.hosting.ovh.net/admin.php";
+            adminButton.href = "admin.php";
             adminButton.textContent = "Admin";
             adminButton.style.marginLeft = "10px";
             adminButton.style.padding = "5px 10px";
@@ -167,20 +167,9 @@ async function checkAndDisplayAdminButton() {
             adminButton.style.textDecoration = "none";
             adminButton.style.borderRadius = "5px";
             compteurEl.appendChild(adminButton);
-
-            // --- Bouton M3U8 (ajouté juste à côté) ---
-            const m3uButton = document.createElement("a");
-            m3uButton.href = "http://vpsfyhi.cluster029.hosting.ovh.net/m3u.php";
-            m3uButton.textContent = "FLUX";
-            m3uButton.style.marginLeft = "10px";
-            m3uButton.style.padding = "5px 10px";
-            m3uButton.style.backgroundColor = "#00e1ffff"; 
-            m3uButton.style.color = "black";
-            m3uButton.style.textDecoration = "none";
-            m3uButton.style.borderRadius = "5px";
-            compteurEl.appendChild(m3uButton);
         }
     } catch (err) {
-        console.error("Impossible d'afficher les boutons admin/m3u8 :", err);
+        console.error("Impossible d'afficher les boutons admin:", err);
     }
+
 }
